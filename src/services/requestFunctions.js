@@ -1,7 +1,7 @@
 import api from './api';   
 
 export const authRegister = async (username) => {
-    const response = await api("auth/register", {
+    const response = await api("auth/register/", {
         method: 'POST',
         data: {
             username,
@@ -12,7 +12,7 @@ export const authRegister = async (username) => {
 
 
 export const authLogin = async (username) => {
-    const response = await api("auth/login", {
+    const response = await api("auth/login/", {
         method: 'POST',
         data: {
             username,
@@ -25,7 +25,7 @@ export const authLogin = async (username) => {
 // --------------------------- TASKS
 
 export const createTask = async (token, values) => {
-    const response = await api("tasks", {
+    const response = await api("tasks/", {
         method: 'POST',
         headers: {
             Authorization: `Bearer ${token}`,
@@ -40,7 +40,7 @@ export const createTask = async (token, values) => {
 };
 
 export const fetchTask = async (token) => {
-    const response = await api("tasks", {
+    const response = await api("tasks/", {
         method: 'GET',
         headers: {
             Authorization: `Bearer ${token}`,
@@ -50,7 +50,7 @@ export const fetchTask = async (token) => {
 };
 
 export const editTask = async (token, values, taskId) => {
-    const response = await api(`tasks/${taskId}`, {
+    const response = await api(`tasks/${taskId}/`, {
         method: 'PUT',
         headers: {
             Authorization: `Bearer ${token}`,
@@ -65,7 +65,7 @@ export const editTask = async (token, values, taskId) => {
 };
 
 export const deleteTask = async (token, taskId) => {
-    const response = await api(`tasks/${taskId}`, {
+    const response = await api(`tasks/${taskId}/`, {
         method: 'DELETE',
         headers: {
             Authorization: `Bearer ${token}`,
