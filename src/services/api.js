@@ -1,8 +1,19 @@
-import axios from 'axios';
 
-export default axios.create({
-    baseURL: 'http://144.126.213.60',
-    headers: {
-        'Content-Type': 'application/json',
-    },
-});
+const BASE_URL = "http://144.126.213.60/"
+
+const baseFetch = async (urlRouter, fetchConfig) => {
+    if(!fetchConfig.headers) {
+        fetchConfig.headers = {}
+    }
+
+    if(fetchConfig.method === "POST") {
+        fetchConfig.body = JSON.stringify(fetchConfig.body)
+        fetchConfig.headers["Content-Type"] = "application/json"
+    }
+
+    const fetchResult = await fetch(`${BASE_URL}${urlRouter}`, fetchConfig)
+    return fetchResult.json()
+
+}
+
+export default baseFetch
