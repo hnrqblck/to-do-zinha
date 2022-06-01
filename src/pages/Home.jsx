@@ -20,32 +20,26 @@ const Home = () => {
         updateTasks();
     }, [])
 
-    function handleSave(value) {
-        createTask(accessToken, value)
-            .then(r => console.log(r));
-        updateTasks();
+    async function handleSave(value) {
+        await createTask(accessToken, value)
+        await updateTasks();
     }
 
-    function handleEdit(value) {
-        editTask(accessToken, value, value.id)
-            .then(r => console.log(r));
-        updateTasks();
+    async function handleEdit(value) {
+        await editTask(accessToken, value, value.id)
+        await updateTasks();
     }
 
-    function updateTasks() {
-        setTimeout(() => {
-            fetchTask(accessToken)
-                .then(({data}) => setTasks(data));
-        }, 500);
-        
+    async function updateTasks() {
+        console.log("EXECUTOU TASKS")
+        const newTasks = await fetchTask(accessToken)
+        setTasks(newTasks)
     }
 
-    function deleteSelectedTask(taskId) {
-        deleteTask(accessToken, taskId)
-            .then(r => console.log(r));
-        updateTasks();
+    async function deleteSelectedTask(taskId) {
+        await deleteTask(accessToken, taskId)
+        await updateTasks();
     }
-
 
   return (
     <>
@@ -66,12 +60,13 @@ const Home = () => {
                 alignItems='center'
                 flexDir='column'
                 >
-                {tasks.length > 0 ? 
+                {tasks?.length > 0 ? 
                     tasks.map(({title, id, description, status}) => (
                         <Box display='flex' alignItems='center'>
                             <Checkbox 
                                 size={'lg'}
                                 mb={5}
+                                isChecked={status == 1}
                                 mr={5}
                                 onChange={() => {
                                     const value = {
@@ -80,6 +75,7 @@ const Home = () => {
                                         id,
                                         status: status == 0 ? true : false,
                                     }
+                                    
                                     handleEdit(value);
                                 }}
                              />
@@ -117,7 +113,11 @@ const Home = () => {
                                     />
                                 </Box>
                                 <TaskModal 
-                                    handleSave={handleEdit}
+                                    handleSave={(newValues) => handleEdit({
+                                        ...newValues,
+                                        id, 
+                                        status
+                                    })}
                                     isOpen={isEditTaskModalOpen} 
                                     onClose={onEditTaskModalClose} 
                                     headingTitle='Editar tarefa' 

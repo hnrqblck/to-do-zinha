@@ -6,7 +6,7 @@ export const authRegister = async (username) => {
         body: { username }
     })
 
-    return response;
+    return response.json();
 };
 
 
@@ -16,7 +16,10 @@ export const authLogin = async (username) => {
         body: { username }
     });
     
-    return response.data.token;
+    const result = await response.json();
+
+    return result.token;
+
 };
 
 
@@ -34,7 +37,7 @@ export const createTask = async (token, values) => {
             status: false,
         }
     });
-    return response;
+    return response.json();
 };
 
 export const fetchTask = async (token) => {
@@ -44,7 +47,9 @@ export const fetchTask = async (token) => {
             Authorization: `Bearer ${token}`,
         },
     });
-    return response;
+
+    
+    return response.json();
 };
 
 export const editTask = async (token, values, taskId) => {
@@ -59,15 +64,14 @@ export const editTask = async (token, values, taskId) => {
             status: values.status,
         }
     });
-    return response;
+    return response.json();
 };
 
 export const deleteTask = async (token, taskId) => {
-    const response = await api(`tasks/${taskId}`, {
+    await api(`tasks/${taskId}`, {
         method: 'DELETE',
         headers: {
             Authorization: `Bearer ${token}`,
         }
     });
-    return response;
 };
