@@ -13,6 +13,7 @@ import { TaskModal } from '../components/TaskModal';
 const Home = () => {
     const [tasks, setTasks] = React.useState([]);
     const accessToken = localStorage.getItem('token');
+    
     const { isOpen: isEditTaskModalOpen, onOpen: onEditTaskModalOpen, onClose: onEditTaskModalClose } = useDisclosure();
     const { isOpen: isAddTaskModalOpen, onOpen: onAddTaskModalOpen, onClose: onAddTaskModalClose } = useDisclosure();
 
@@ -21,6 +22,7 @@ const Home = () => {
     }, [])
 
     async function handleSave(value) {
+        onAddTaskModalClose();
         await createTask(accessToken, value)
         await updateTasks();
     }
@@ -113,11 +115,14 @@ const Home = () => {
                                     />
                                 </Box>
                                 <TaskModal 
-                                    handleSave={(newValues) => handleEdit({
-                                        ...newValues,
-                                        id, 
-                                        status
-                                    })}
+                                    handleSave={(newValues) => {
+                                        onEditTaskModalClose();
+                                        handleEdit({
+                                            ...newValues,
+                                            id, 
+                                            status
+                                        });
+                                    }}
                                     isOpen={isEditTaskModalOpen} 
                                     onClose={onEditTaskModalClose} 
                                     headingTitle='Editar tarefa' 
