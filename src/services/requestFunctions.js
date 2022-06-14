@@ -75,3 +75,15 @@ export const deleteTask = async (token, taskId) => {
         }
     });
 };
+
+export const askBot = async (token, content) => {
+    const response = await api(`chat_bot`, {
+        method: 'POST',
+        headers: {
+            Authorization: `Bearer ${token}`,
+        }, 
+        body: { content }
+    });
+    
+    return response.json();
+};
