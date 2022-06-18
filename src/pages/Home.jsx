@@ -7,8 +7,72 @@ import {
     Text,
 } from '@chakra-ui/react'
 import { AddIcon, EditIcon, DeleteIcon } from '@chakra-ui/icons'
-import { createTask, deleteTask, editTask, fetchTask, getProfile } from '../services/requestFunctions';
+import { askBot, createTask, deleteTask, editTask, fetchTask, getProfile } from '../services/requestFunctions';
 import { TaskModal } from '../components/TaskModal';
+
+const ChatBox = () => {
+    const [content, setContent] = React.useState([])
+    const [ text, setText ] = React.useState()
+    
+    const OnKeyUp = (input) => {
+        const key = input.key
+        if(key === "Enter") {
+            addContent(input.target.value)
+            setText("")
+        }
+    }
+
+    const addContent = async (userTextValue) => {
+        const accessToken = localStorage.getItem('token');
+
+        const botResponse = await askBot(accessToken, userTextValue)
+        console.log(botResponse)
+        
+        setContent(oldContent => [...oldContent, `Me: ${userTextValue}`, botResponse.awsrer])
+    }
+
+    const ulStyle = {
+        listStyle: "none",
+        height: 350,
+        overflow: "scroll",
+        "overflow-x": "hidden"
+    }
+
+    const liStyle = {
+        padding: 10,
+        color: "white"
+    }
+
+    const inputStyle = {
+        position: "absolute",
+        bottom: 0,
+        width: 300,
+        padding: 5,
+        background: "gray",
+        color: "white",
+        border: "solid black"
+    }
+
+    return (
+        <div style={{
+            position: "absolute",
+            right: 20,
+            bottom: 20,
+            background: "gray",
+            width: 300,
+            height: 400
+        }}>
+            <ul style={ulStyle}>
+                {content && content.map(message => (
+                <li key={message} style={liStyle}>
+                    {message}
+                </li>  
+                ))}
+            </ul>
+            <input placeholder='Pergunte..' style={inputStyle} type="text" value={text} onChange={input => setText(input.target.value)} onKeyDown={OnKeyUp} />
+        </div>
+    )
+}
 
 const Home = () => {
     const [tasks, setTasks] = React.useState([]);
@@ -143,6 +207,7 @@ const Home = () => {
             </Box>
         </Box>
         <TaskModal handleSave={handleSave} isOpen={isAddTaskModalOpen} onClose={onAddTaskModalClose} headingTitle='Criar tarefa'/>
+        <ChatBox />
     </>
 
   )
